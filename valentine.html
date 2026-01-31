@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.3);
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ff1493;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff1493 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.6);
+            animation: glow 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 8px 25px rgba(255, 20, 147, 0.6);
+            }
+            to {
+                box-shadow: 0 8px 35px rgba(255, 20, 147, 0.9);
+            }
+        }
+
+        .no-btn {
+            background: linear-gradient(135deg, #ddd 0%, #bbb 100%);
+            color: #666;
+        }
+
+        .no-btn:hover {
+            background: linear-gradient(135deg, #ccc 0%, #aaa 100%);
+        }
+
+        .result {
+            display: none;
+        }
+
+        .result.active {
+            display: block;
+        }
+
+        .result h1 {
+            font-size: 3.5em;
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .result img {
+            max-width: 300px;
+            border-radius: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .nuh-uh-gif {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            max-width: 200px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            display: none;
+        }
+
+        .nuh-uh-gif.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(300px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .floating-text {
+            position: fixed;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff1493;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            z-index: 999;
+            animation: floatAway 1.5s ease-out forwards;
+        }
+
+        @keyframes floatAway {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+
+        .shake {
+            animation: shake 0.2s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .spawned-yes {
+            position: absolute;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes hearts {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 2em;
+            animation: hearts 3s linear infinite;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div id="question">
+            <h1>Layu, will you be my Valentine?</h1>
+            <div class="buttons" id="buttonsContainer">
+                <button class="yes-btn" onclick="handleYes()">Yes</button>
+                <button class="no-btn" onclick="handleNo()">No</button>
+            </div>
+        </div>
+        <div class="result" id="result">
+            <h1>YIPPEE!!! 💖</h1>
+            <img src="fast-cat-cat-excited.gif" alt="Excited cat">
+        </div>
+    </div>
+
+    <img class="nuh-uh-gif" id="nuhUhGif" src="nuh-uh-cat.gif" alt="Nuh uh cat">
+
+    <script>
+        const memeTexts = [
+            "Choose love 💕",
+            "Why are you like this",
+            "Just click yes bro",
+            "Baby pls 😭",
+            "This is getting embarrassing",
+            "The Yes button army grows…",
+            "You know you want to 💖",
+            "PLEASE 🥺",
+            "Stop being difficult",
+            "YES is the only answer"
+        ];
+
+        let textIndex = 0;
+
+        function handleYes() {
+            document.getElementById('question').style.display = 'none';
+            document.getElementById('result').classList.add('active');
+            document.getElementById('nuhUhGif').classList.remove('show');
+            
+            // Spawn hearts
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => spawnHeart(), i * 100);
+            }
+        }
+
+        function handleNo() {
+            // Show nuh uh gif
+            document.getElementById('nuhUhGif').classList.add('show');
+            
+            // Shake screen
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 200);
+            
+            // Spawn floating text
+            spawnFloatingText();
+            
+            // Spawn new Yes button
+            spawnYesButton();
+        }
+
+        function spawnFloatingText() {
+            const text = document.createElement('div');
+            text.className = 'floating-text';
+            text.textContent = memeTexts[textIndex % memeTexts.length];
+            textIndex++;
+            
+            // Random position
+            text.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+            text.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            
+            document.body.appendChild(text);
+            
+            setTimeout(() => text.remove(), 1500);
+        }
+
+        function spawnYesButton() {
+            const btn = document.createElement('button');
+            btn.className = 'yes-btn spawned-yes';
+            btn.textContent = 'Yes';
+            btn.onclick = handleYes;
+            
+            // Random position near the buttons area
+            const offsetX = (Math.random() - 0.5) * 200;
+            const offsetY = (Math.random() - 0.5) * 150;
+            btn.style.left = offsetX + 'px';
+            btn.style.top = offsetY + 'px';
+            
+            document.getElementById('buttonsContainer').appendChild(btn);
+        }
+
+        function spawnHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '💖';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = window.innerHeight + 'px';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
